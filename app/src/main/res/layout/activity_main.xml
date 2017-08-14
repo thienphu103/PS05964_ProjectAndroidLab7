@@ -16,7 +16,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        android:padding="30sp"/>
+        />
 
     <Button
 
@@ -25,6 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
         android:text="Add Book"
+        android:background="@null"
+        android:drawableLeft="@drawable/add"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -52,6 +54,8 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
         android:text="Search"
+        android:background="@null"
+        android:drawableLeft="@drawable/search"
         app:layout_constraintHorizontal_bias="0.971"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

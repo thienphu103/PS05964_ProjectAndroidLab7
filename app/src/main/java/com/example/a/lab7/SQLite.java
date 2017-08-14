@@ -68,7 +68,7 @@ public class SQLite extends SQLiteOpenHelper {
 
     public ArrayList<ClassBook> getSearchBook(String name) {
         arrayList.clear();
-        String sql= "SELECT * FROM " + TABLE + " WHERE " + KEY_TILTE + " LIKE '"+name+"'";;
+        String sql= "SELECT * FROM " + TABLE + " WHERE " + KEY_TILTE + " LIKE '%"+name+"%'";;
         Cursor cursor = GetData(sql);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(0);

@@ -52,10 +52,12 @@ public class ClassBook  {
     public void setPrice(String price) {
         this.price = price;
     }
-
     @Override
     public String toString() {
-        return  id +" - "+ tilte +" -- "+ author +" - "+ price ;
+        return "ID : " +id +"\n"+
+                "Tilte : " +tilte +"\n"+
+                "Author : " +author +"\n"+
+                "Price : " +price ;
     }
 
 }

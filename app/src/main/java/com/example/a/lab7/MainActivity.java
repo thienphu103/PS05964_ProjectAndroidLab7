@@ -1,7 +1,9 @@
 package com.example.a.lab7;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         btndialogup = (Button) findViewById(R.id.dialogbtnUP);
         btndialogdel = (Button) findViewById(R.id.dialogbtnDEL);
         btnsearch = (Button) findViewById(R.id.btnSearch);
-        txtdialogname=(TextView) dialog.findViewById(R.id.dialogName);
+        txtdialogname = (TextView) dialog.findViewById(R.id.dialogName);
 //        database.getDataBook("");
         arrayList.clear();
         showlist("");
@@ -62,17 +64,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DialogBook();
-
                 btndialogup.setText("Add");
                 txtdialogname.setText("");
                 btndialogdel.setVisibility(View.INVISIBLE);
-
             }
         });
         btnsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("text",edtsearch.getText().toString());
+                Log.d("text", edtsearch.getText().toString());
                 arrayList.clear();
                 arrayAdapter.notifyDataSetChanged();
 //                database.getSearchBook("");
@@ -84,27 +84,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final int index = i;
-                final String indextext = arrayList.get(index).toString();
-                final String deltext = indextext.substring(0, indextext.indexOf("-")).trim();
-//                Log.d("index",index+"   "+deltext+"   "+indextxt);
-
-                txtdialogname=(TextView) dialog.findViewById(R.id.dialogName);
-                final String namedialog=indextext.substring(indextext.indexOf("-")+1,indextext.indexOf("--"));
+                ClassBook a = new ClassBook();
+                final String indextext = arrayList.get(index).getId() + "";
+                ;
+                Log.d("index", index + "  " + indextext);
+                txtdialogname = (TextView) dialog.findViewById(R.id.dialogName);
+//                final String namedialog=indextext.substring(indextext.indexOf("\n")+1,indextext.indexOf("\n"));
                 DialogBook();
                 btndialogdel.setVisibility(View.VISIBLE);
                 dialog.setTitle("Update and Delete");
-
-                txtdialogname.setText(namedialog);
+                txtdialogname.setText(arrayList.get(index).getTilte());
                 btndialogdel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String sql = database.deleteBook(deltext);
-                        database.QueryData(sql);
+                        final String sql = database.deleteBook(indextext);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Delete");
+                        builder.setMessage("Can You Detele " + arrayList.get(index).getTilte() + " Book ?");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                database.QueryData(sql);
+                                Toast.makeText(getApplicationContext(), "Delete OK", Toast.LENGTH_SHORT).show();
+                                database.getDataBook("");
+                                arrayAdapter.notifyDataSetChanged();
+                            }
+
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                        builder.show();
                         database.getDataBook("");
                         arrayList.clear();
                         arrayAdapter.notifyDataSetChanged();
                         showlist("");
-                        Toast.makeText(getApplicationContext(), "Delete OK", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
@@ -115,14 +132,36 @@ public class MainActivity extends AppCompatActivity {
                         String tilte = edtdialogTilte.getText().toString();
                         String author = edtdialogAuthor.getText().toString();
                         String price = edtdialogPrice.getText().toString();
-                        String sql = database.updateBook(Integer.parseInt(id), tilte, author, price,deltext);
-                        database.QueryData(sql);
+                        final String sql = database.updateBook(Integer.parseInt(id), tilte, author, price, indextext);
+                        try {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            builder.setTitle("Update");
+                            builder.setMessage("Can You Update " + arrayList.get(index).getTilte() +" to "+tilte+"  Book ?");
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    database.QueryData(sql);
+                                    Toast.makeText(getApplicationContext(), "Update OK", Toast.LENGTH_SHORT).show();
+                                    database.getDataBook("");
+                                    arrayAdapter.notifyDataSetChanged();
+                                }
+
+                            });
+                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                            builder.show();
+                        } catch (Exception ex) {
+                            AlertErrorDialog();
+                        }
 //                arrayList.add(new ClassBook(Integer.parseInt(id),tilte,author,price));
                         database.getDataBook("");
                         arrayList.clear();
                         arrayAdapter.notifyDataSetChanged();
                         showlist("");
-                        Toast.makeText(getApplicationContext(), "Update OK", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
 
 //              database.QueryData(database.addBook(new ClassBook(0,tilte,author,price)));
@@ -156,27 +195,44 @@ public class MainActivity extends AppCompatActivity {
                 String tilte = edtdialogTilte.getText().toString();
                 String author = edtdialogAuthor.getText().toString();
                 String price = edtdialogPrice.getText().toString();
-                String sql = database.addBook(Integer.parseInt(id), tilte, author, price);
-                database.QueryData(sql);
+                final String sql = database.addBook(Integer.parseInt(id), tilte, author, price);
+                    try {
+                        database.QueryData(sql);
+                        Toast.makeText(getApplicationContext(), "Add OK", Toast.LENGTH_SHORT).show();
+                    }catch (Exception ex){
+                        AlertErrorDialog();
+                    }
+
 //                arrayList.add(new ClassBook(Integer.parseInt(id),tilte,author,price));
-                database.getDataBook("");
-                arrayList.clear();
-                arrayAdapter.notifyDataSetChanged();
-                showlist("");
-                Toast.makeText(getApplicationContext(), "Add OK", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                    database.getDataBook("");
+                    arrayList.clear();
+                    arrayAdapter.notifyDataSetChanged();
+                    showlist("");
+                    dialog.dismiss();
+                }
 
 //              database.QueryData(database.addBook(new ClassBook(0,tilte,author,price)));
-            }
+
         });
         dialog.show();
     }
 
-    public void showlist(String name) {
-        if(name.equals("")) {
-            arrayList = database.getDataBook("");
+public void AlertErrorDialog(){
+    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+    builder.setTitle("Error");
+    builder.setMessage("ID Exist, Please input other Id.Tks");
+    builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+
         }
-        else{
+    });
+    builder.show();
+}
+    public void showlist(String name) {
+        if (name.equals("")) {
+            arrayList = database.getDataBook("");
+        } else {
             arrayList = database.getSearchBook(edtsearch.getText().toString());
         }
         arrayAdapter = new ArrayAdapter<ClassBook>(this, android.R.layout.simple_list_item_1, arrayList);
