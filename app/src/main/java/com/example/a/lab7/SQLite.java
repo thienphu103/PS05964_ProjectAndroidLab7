@@ -39,9 +39,9 @@ public class SQLite extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS '" + TABLE + "'");
         String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE + "(" +
                 KEY_ID + " INTEGER PRIMARY KEY," +// AUTOINCREMENT
-                KEY_TILTE + " WARCHAR," +
-                KEY_AUTHOR + " WARCHAR," +
-                KEY_PRICE + " WARCHAR)";
+                KEY_TILTE + " VARCHAR," +
+                KEY_AUTHOR + " VARCHAR," +
+                KEY_PRICE + " VARCHAR)";
         db.execSQL(CREATE_TABLE);
 
     }
