@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -67,6 +69,30 @@ public class MainActivity extends AppCompatActivity {
                 btndialogup.setText("Add");
                 txtdialogname.setText("");
                 btndialogdel.setVisibility(View.INVISIBLE);
+            }
+        });
+        edtsearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//Toast.makeText(getContext(),"aaa",Toast.LENGTH_LONG).show();
+
+                Log.d("text", edtsearch.getText().toString());
+                arrayList.clear();
+                arrayAdapter.notifyDataSetChanged();
+//                database.getSearchBook("");
+                showlist(edtsearch.getText().toString());
+                Toast.makeText(MainActivity.this, "Search OK", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
         btnsearch.setOnClickListener(new View.OnClickListener() {
